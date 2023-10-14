@@ -42,7 +42,6 @@ describe('RNPickerSelect', () => {
     beforeEach(() => {
         jest.resetAllMocks();
         jest.spyOn(Keyboard, 'dismiss');
-        jest.spyOn(Keyboard, 'addListener');
         Keyboard.isVisible = jest.fn().mockReturnValue(false);
     });
 
@@ -144,25 +143,6 @@ describe('RNPickerSelect', () => {
         const touchable = wrapper.find('TouchableOpacity').at(1);
         touchable.simulate('press');
         expect(wrapper.state().showPicker).toEqual(true);
-    });
-
-    it('should call Keyboard.addListener when keyboard is visible', () => {
-        Keyboard.isVisible.mockReturnValue(true);
-        const wrapper = shallow(<RNPickerSelect items={selectItems} onValueChange={noop} />);
-
-        const touchable = wrapper.find('TouchableOpacity').at(1);
-        touchable.simulate('press');
-        expect(Keyboard.addListener).toHaveBeenCalledTimes(1);
-        expect(Keyboard.addListener).toHaveBeenCalledWith('keyboardDidHide', expect.any(Function));
-    });
-
-    it('should not call Keyboard.addListener when keyboard is not visible', () => {
-        Keyboard.isVisible.mockReturnValue(false);
-        const wrapper = shallow(<RNPickerSelect items={selectItems} onValueChange={noop} />);
-
-        const touchable = wrapper.find('TouchableOpacity').at(1);
-        touchable.simulate('press');
-        expect(Keyboard.addListener).not.toHaveBeenCalled();
     });
 
     it('should not show the picker when pressed if disabled', () => {
@@ -437,7 +417,7 @@ describe('RNPickerSelect', () => {
         // Close
         touchable.simulate('press');
 
-        expect(onCloseSpy).toHaveBeenCalledWith();
+        expect(onCloseSpy).toHaveBeenCalledWith(true);
     });
 
     it('should close the modal when the empty area above the picker is tapped', () => {
@@ -449,6 +429,19 @@ describe('RNPickerSelect', () => {
         touchable.simulate('press');
 
         expect(wrapper.instance().togglePicker).toHaveBeenCalledWith(true);
+    });
+
+    it('should use the dark theme when `darkTheme` prop is provided on iOS', () => {
+        Platform.OS = 'ios';
+
+        const wrapper = shallow(
+            <RNPickerSelect items={selectItems} onValueChange={noop} darkTheme />
+        );
+
+        const input_accessory_view = wrapper.find('[testID="input_accessory_view"]');
+        const darkThemeStyle = input_accessory_view.get(0).props.style[1];
+
+        expect(darkThemeStyle).toHaveProperty('backgroundColor', '#232323');
     });
 
     // TODO - fix

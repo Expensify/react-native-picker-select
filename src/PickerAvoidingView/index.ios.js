@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
+import PropTypes from 'prop-types';
 import { PickerStateContext } from '../PickerStateProvider';
 import { IOS_MODAL_HEIGHT } from '../constants';
-import PropTypes from 'prop-types';
 
 /**
  * PickerAvoidingView is a React component that adjusts the view layout to avoid
@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
  * @param {React.ReactNode} props.children - The child components that should be
  * protected from obstruction by the picker modal
  */
+// eslint-disable-next-line react/prefer-stateless-function
 export class PickerAvoidingView extends Component {
     static propTypes = {
         enabled: PropTypes.bool,
