@@ -99,7 +99,6 @@ export interface PickerSelectProps {
 
 declare class Picker extends React.Component<PickerSelectProps> {
     togglePicker: (animate?: boolean, postToggleCallback?: () => void) => void;
-
     focus: () => void;
 }
 
