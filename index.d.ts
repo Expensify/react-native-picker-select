@@ -56,7 +56,9 @@ type CustomModalProps = Omit<ModalProps, 'visible' | 'transparent' | 'animationT
 type CustomTextInputProps = Omit<TextInputProps, 'style' | 'value' | 'ref' | 'editable'>;
 // 'testID' is also used, but can be overwritten safely
 
-type CustomPickerProps = Omit<PickerProps, 'onValueChange' | 'selectedValue'>;
+type CustomPickerProps = Omit<PickerProps, 'onValueChange' | 'selectedValue'> & {
+    ref?: React.RefObject<Picker>;
+};
 // 'style' and 'enabled' are also used, but only in headless or native Android mode
 // 'testID' is also used, but can be overwritten safely
 
@@ -88,7 +90,7 @@ export interface PickerSelectProps {
     pickerProps?: CustomPickerProps;
     touchableDoneProps?: CustomTouchableDoneProps;
     touchableWrapperProps?: CustomTouchableWrapperProps;
-    Icon?: React.ReactNode;
+    Icon?: React.ComponentType;
     InputAccessoryView?: React.ReactNode;
     scrollViewRef?: React.RefObject<ScrollView>;
     scrollViewContentOffsetY?: number;
@@ -97,6 +99,7 @@ export interface PickerSelectProps {
 
 declare class Picker extends React.Component<PickerSelectProps> {
     togglePicker: (animate?: boolean, postToggleCallback?: () => void) => void;
+    focus: () => void;
 }
 
 export default Picker;
