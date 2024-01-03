@@ -5,6 +5,7 @@ import {
     TextStyle,
     TouchableOpacityProps,
     ViewStyle,
+    ViewProps,
 } from 'react-native';
 import React from 'react';
 import { PickerProps } from '@react-native-picker/picker/typings/Picker';
@@ -110,4 +111,6 @@ type PickerStateProviderProps = {
 
 export const PickerStateProvider: React.ComponentType<PickerStateProviderProps>;
 
-export const PickerAvoidingView: React.ComponentType<React.PropsWithChildren>;
+type PickerAvoidingViewProps = ViewProps & { enabled?: boolean };
+
+export const PickerAvoidingView: React.ComponentType<PickerAvoidingViewProps>;
