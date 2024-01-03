@@ -7,7 +7,7 @@ import {
     ViewStyle,
     ViewProps,
 } from 'react-native';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { PickerProps } from '@react-native-picker/picker/typings/Picker';
 
 export interface Item {
@@ -111,6 +111,6 @@ type PickerStateProviderProps = {
 
 export const PickerStateProvider: React.ComponentType<PickerStateProviderProps>;
 
-type PickerAvoidingViewProps = ViewProps & { enabled?: boolean; children?: ReactNode };
+type PickerAvoidingViewProps = ViewProps & { enabled?: boolean };
 
 export const PickerAvoidingView: React.ComponentType<PickerAvoidingViewProps>;
