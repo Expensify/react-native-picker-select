@@ -106,7 +106,7 @@ declare class Picker extends React.Component<PickerSelectProps> {
 export default Picker;
 
 type PickerStateProviderProps = {
-    readonly children: React.ReactChild;
+    readonly children: React.ReactNode;
 };
 
 export const PickerStateProvider: React.ComponentType<PickerStateProviderProps>;
