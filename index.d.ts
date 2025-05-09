@@ -58,7 +58,7 @@ type CustomTextInputProps = Omit<TextInputProps, 'style' | 'value' | 'ref' | 'ed
 // 'testID' is also used, but can be overwritten safely
 
 type CustomPickerProps = Omit<PickerProps, 'onValueChange' | 'selectedValue'> & {
-    ref?: React.RefObject<Picker>;
+    ref?: React.Ref<Picker>;
 };
 // 'style' and 'enabled' are also used, but only in headless or native Android mode
 // 'testID' is also used, but can be overwritten safely
