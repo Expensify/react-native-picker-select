@@ -404,6 +404,156 @@ describe('RNPickerSelect', () => {
         expect(touchable.type().displayName).toEqual('View');
     });
 
+    describe('Android headless mode accessibility', () => {
+        beforeEach(() => {
+            Platform.OS = 'android';
+        });
+
+        it('should have accessibility props on the wrapper (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+
+            expect(touchable.props().accessible).toEqual(true);
+            expect(touchable.props().accessibilityRole).toEqual('combobox');
+            // Default placeholder label is "Select an item..."
+            expect(touchable.props().accessibilityLabel).toEqual('Select an item...');
+            expect(touchable.props().accessibilityState).toEqual({ disabled: false });
+            expect(touchable.props().accessibilityActions).toEqual([{ name: 'activate' }]);
+            expect(touchable.props().onAccessibilityAction).toBeDefined();
+        });
+
+        it('should use selectedItem label as accessibilityLabel (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    placeholder={{}}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    value="orange"
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+
+            expect(touchable.props().accessibilityLabel).toEqual('Orange');
+        });
+
+        it('should use inputLabel as accessibilityLabel when provided (Android headless)', () => {
+            const itemsWithInputLabel = [{ label: 'Red', value: 'red', inputLabel: 'RED COLOR' }];
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={itemsWithInputLabel}
+                    placeholder={{}}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    value="red"
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+
+            expect(touchable.props().accessibilityLabel).toEqual('RED COLOR');
+        });
+
+        it('should have importantForAccessibility on inner container (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+            const innerContainer = touchable.children().first();
+
+            expect(innerContainer.props().importantForAccessibility).toEqual('no-hide-descendants');
+        });
+
+        it('should not trigger picker when disabled and accessibility action is called (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    disabled
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+            const onAccessibilityAction = touchable.props().onAccessibilityAction;
+
+            // This should not throw and should be a no-op when disabled
+            expect(() => {
+                onAccessibilityAction({ nativeEvent: { actionName: 'activate' } });
+            }).not.toThrow();
+        });
+
+        it('should set accessibilityState.disabled to true when disabled (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    disabled
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+
+            expect(touchable.props().accessibilityState).toEqual({ disabled: true });
+        });
+
+        it('should call pickerRef.focus() when accessibility action "activate" is triggered (Android headless)', () => {
+            const mockFocus = jest.fn();
+            const mockRef = { current: { focus: mockFocus } };
+
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    pickerProps={{ ref: mockRef }}
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+            const onAccessibilityAction = touchable.props().onAccessibilityAction;
+
+            onAccessibilityAction({ nativeEvent: { actionName: 'activate' } });
+
+            expect(mockFocus).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not call pickerRef.focus() for non-activate actions (Android headless)', () => {
+            const mockFocus = jest.fn();
+            const mockRef = { current: { focus: mockFocus } };
+
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    pickerProps={{ ref: mockRef }}
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+            const onAccessibilityAction = touchable.props().onAccessibilityAction;
+
+            onAccessibilityAction({ nativeEvent: { actionName: 'longpress' } });
+
+            expect(mockFocus).not.toHaveBeenCalled();
+        });
+    });
+
     it('should call the onClose callback when set', () => {
         Platform.OS = 'ios';
         const onCloseSpy = jest.fn();
