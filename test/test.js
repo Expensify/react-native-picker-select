@@ -415,6 +415,9 @@ describe('RNPickerSelect', () => {
                     items={selectItems}
                     onValueChange={noop}
                     useNativeAndroidPickerStyle={false}
+                    pickerProps={{
+                        accessibilityLabel: 'Select an item',
+                    }}
                 />
             );
 
@@ -422,14 +425,32 @@ describe('RNPickerSelect', () => {
 
             expect(touchable.props().accessible).toEqual(true);
             expect(touchable.props().accessibilityRole).toEqual('combobox');
-            // Default placeholder label is "Select an item..."
-            expect(touchable.props().accessibilityLabel).toEqual('Select an item...');
+            expect(touchable.props().accessibilityLabel).toEqual('Select an item');
             expect(touchable.props().accessibilityState).toEqual({ disabled: false });
             expect(touchable.props().accessibilityActions).toEqual([{ name: 'activate' }]);
             expect(touchable.props().onAccessibilityAction).toBeDefined();
         });
 
-        it('should use selectedItem label as accessibilityLabel (Android headless)', () => {
+        it('should use accessibilityLabel from pickerProps (Android headless)', () => {
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    placeholder={{}}
+                    onValueChange={noop}
+                    useNativeAndroidPickerStyle={false}
+                    value="orange"
+                    pickerProps={{
+                        accessibilityLabel: 'Choose a color',
+                    }}
+                />
+            );
+
+            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
+
+            expect(touchable.props().accessibilityLabel).toEqual('Choose a color');
+        });
+
+        it('should have undefined accessibilityLabel when not provided via pickerProps (Android headless)', () => {
             const wrapper = shallow(
                 <RNPickerSelect
                     items={selectItems}
@@ -442,24 +463,7 @@ describe('RNPickerSelect', () => {
 
             const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
 
-            expect(touchable.props().accessibilityLabel).toEqual('Orange');
-        });
-
-        it('should use inputLabel as accessibilityLabel when provided (Android headless)', () => {
-            const itemsWithInputLabel = [{ label: 'Red', value: 'red', inputLabel: 'RED COLOR' }];
-            const wrapper = shallow(
-                <RNPickerSelect
-                    items={itemsWithInputLabel}
-                    placeholder={{}}
-                    onValueChange={noop}
-                    useNativeAndroidPickerStyle={false}
-                    value="red"
-                />
-            );
-
-            const touchable = wrapper.find('[testID="android_touchable_wrapper"]');
-
-            expect(touchable.props().accessibilityLabel).toEqual('RED COLOR');
+            expect(touchable.props().accessibilityLabel).toBeUndefined();
         });
 
         it('should have importantForAccessibility on inner container (Android headless)', () => {
