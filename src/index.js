@@ -593,7 +593,7 @@ export default class RNPickerSelect extends PureComponent {
             }
         };
 
-        const accessibilityLabel = selectedItem.inputLabel || selectedItem.label;
+        const accessibilityLabel = pickerProps && pickerProps.accessibilityLabel;
 
         return (
             <Component
