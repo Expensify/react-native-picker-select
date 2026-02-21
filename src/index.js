@@ -165,6 +165,7 @@ export default class RNPickerSelect extends PureComponent {
         this.scrollToInput = this.scrollToInput.bind(this);
         this.togglePicker = this.togglePicker.bind(this);
         this.renderInputAccessoryView = this.renderInputAccessoryView.bind(this);
+        this.androidPickerRef = React.createRef();
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -579,16 +580,41 @@ export default class RNPickerSelect extends PureComponent {
         const { selectedItem } = this.state;
 
         const Component = fixAndroidTouchableBug ? View : TouchableOpacity;
+        const pickerRef = (pickerProps && pickerProps.ref) || this.androidPickerRef;
+
+        const handleAccessibilityAction = (event) => {
+            if (disabled) {
+                return;
+            }
+            if (event.nativeEvent.actionName === 'activate') {
+                if (pickerRef && pickerRef.current && pickerRef.current.focus) {
+                    pickerRef.current.focus();
+                }
+            }
+        };
+
+        const accessibilityLabel = pickerProps && pickerProps.accessibilityLabel;
+
         return (
             <Component
                 testID="android_touchable_wrapper"
                 onPress={onOpen}
                 activeOpacity={1}
                 {...touchableWrapperProps}
+                accessible
+                accessibilityRole="combobox"
+                accessibilityLabel={accessibilityLabel}
+                accessibilityState={{ disabled }}
+                onAccessibilityAction={handleAccessibilityAction}
+                accessibilityActions={[{ name: 'activate' }]}
             >
-                <View style={style.headlessAndroidContainer}>
+                <View
+                    style={style.headlessAndroidContainer}
+                    importantForAccessibility="no-hide-descendants"
+                >
                     {this.renderTextInputOrChildren()}
                     <Picker
+                        ref={pickerRef}
                         style={[
                             Icon ? { backgroundColor: 'transparent' } : {}, // to hide native icon
                             defaultStyles.headlessAndroidPicker,
