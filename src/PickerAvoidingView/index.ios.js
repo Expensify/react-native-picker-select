@@ -18,30 +18,29 @@ import { IOS_MODAL_HEIGHT } from '../constants';
  */
 // eslint-disable-next-line react/prefer-stateless-function
 export class PickerAvoidingView extends Component {
-    static propTypes = {
-        enabled: PropTypes.bool,
-    };
+  static propTypes = {
+    enabled: PropTypes.bool,
+  };
 
-    static defaultProps = {
-        enabled: true,
-    };
+  static defaultProps = {
+    enabled: true,
+  };
 
-    render() {
-        const { enabled, style, ...viewProps } = this.props;
+  render() {
+    const { enabled, style, ...viewProps } = this.props;
 
-        return (
-            <PickerStateContext.Consumer>
-                {(context) => {
-                    const isModalShown = context && context.isModalShown;
-                    const effectiveStyle = enabled
-                        ? StyleSheet.compose(style, {
-                              paddingBottom: isModalShown ? IOS_MODAL_HEIGHT : 0,
-                          })
-                        : style;
+    return (
+      <PickerStateContext.Consumer>
+        {(context) => {
+          const isModalShown = context && context.isModalShown;
+          const padding = isModalShown ? IOS_MODAL_HEIGHT : 0;
+          const effectiveStyle = enabled
+            ? StyleSheet.compose(style, { paddingBottom: padding })
+            : style;
 
-                    return <View style={effectiveStyle} {...viewProps} />;
-                }}
-            </PickerStateContext.Consumer>
-        );
-    }
+          return <View style={effectiveStyle} {...viewProps} />;
+        }}
+      </PickerStateContext.Consumer>
+    );
+  }
 }
