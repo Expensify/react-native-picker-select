@@ -21,4 +21,9 @@ jobs:
         run: yarn
 
       - name: Lint commit message
-        run: yarn commitlint --from=HEAD~1
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            yarn commitlint --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
+          else
+            yarn commitlint --from=HEAD~1
+          fi
