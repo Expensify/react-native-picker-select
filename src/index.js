@@ -295,13 +295,9 @@ export default class RNPickerSelect extends PureComponent {
       onOpen();
     }
 
-    if (showPicker && onClose) {
-      onClose(donePressed);
-    }
-
     if (showPicker) {
       if (onClose) {
-        onClose();
+        onClose(donePressed);
       }
 
       // If the picker is currently shown, toggling it will start closing
