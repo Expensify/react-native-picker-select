@@ -23,7 +23,17 @@ jobs:
       - name: Lint commit message
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            yarn commitlint --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
+            # Only lint first-parent non-merge commits to skip merged upstream history
+            commits=$(git rev-list --no-merges --first-parent \
+              ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+            if [ -n "$commits" ]; then
+              for sha in $commits; do
+                echo "Linting commit $sha..."
+                yarn commitlint --from="$sha~1" --to="$sha"
+              done
+            else
+              echo "No non-merge commits to lint"
+            fi
           else
             yarn commitlint --from=HEAD~1
           fi
