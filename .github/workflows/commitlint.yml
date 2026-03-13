@@ -1,0 +1,39 @@
+name: commitlint
+on: [push, pull_request]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          cache: yarn
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Lint commit message
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Only lint first-parent non-merge commits to skip merged upstream history
+            commits=$(git rev-list --no-merges --first-parent \
+              ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+            if [ -n "$commits" ]; then
+              for sha in $commits; do
+                echo "Linting commit $sha..."
+                yarn commitlint --from="$sha~1" --to="$sha"
+              done
+            else
+              echo "No non-merge commits to lint"
+            fi
+          else
+            yarn commitlint --from=HEAD~1
+          fi

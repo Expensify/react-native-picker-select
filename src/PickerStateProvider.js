@@ -18,27 +18,27 @@ export const PickerStateContext = React.createContext();
  * instances in your application.
  */
 export class PickerStateProvider extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            isModalShown: false,
-        };
-    }
+    this.state = {
+      isModalShown: false,
+    };
+  }
 
-    render() {
-        // eslint-disable-next-line react/jsx-no-constructed-context-values
-        const context = {
-            isModalShown: this.state.isModalShown,
-            setIsModalShown: (isModalShown) => {
-                this.setState({ isModalShown });
-            },
-        };
+  render() {
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
+    const context = {
+      isModalShown: this.state.isModalShown,
+      setIsModalShown: (isModalShown) => {
+        this.setState({ isModalShown });
+      },
+    };
 
-        return (
-            <PickerStateContext.Provider value={context}>
-                {this.props.children}
-            </PickerStateContext.Provider>
-        );
-    }
+    return (
+      <PickerStateContext.Provider value={context}>
+        {this.props.children}
+      </PickerStateContext.Provider>
+    );
+  }
 }
