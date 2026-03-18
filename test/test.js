@@ -657,6 +657,108 @@ describe("RNPickerSelect", () => {
     });
   });
 
+  describe("iOS mode accessibility", () => {
+    beforeEach(() => {
+      Platform.OS = "ios";
+    });
+
+    it("should have accessibility props on the wrapper (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect
+          items={selectItems}
+          onValueChange={noop}
+          pickerProps={{
+            accessibilityLabel: "Select a language",
+          }}
+        />,
+      );
+
+      const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
+
+      expect(touchable.props().accessible).toEqual(true);
+      expect(touchable.props().accessibilityRole).toEqual("combobox");
+      expect(touchable.props().accessibilityLabel).toEqual("Select a language");
+      expect(touchable.props().accessibilityState).toEqual({ disabled: false, expanded: false });
+    });
+
+    it("should use accessibilityLabel from pickerProps (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect
+          items={selectItems}
+          onValueChange={noop}
+          pickerProps={{
+            accessibilityLabel: "Choose a color",
+          }}
+        />,
+      );
+
+      const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
+
+      expect(touchable.props().accessibilityLabel).toEqual("Choose a color");
+    });
+
+    it("should have undefined accessibilityLabel when not provided via pickerProps (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect items={selectItems} onValueChange={noop} />,
+      );
+
+      const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
+
+      expect(touchable.props().accessibilityLabel).toBeUndefined();
+    });
+
+    it("should set accessibilityState.expanded to true when picker is open (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect items={selectItems} onValueChange={noop} />,
+      );
+
+      wrapper.find('[testID="ios_touchable_wrapper"]').simulate("press");
+
+      const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
+
+      expect(touchable.props().accessibilityState).toEqual({ disabled: false, expanded: true });
+    });
+
+    it("should set accessibilityState.disabled to true when disabled (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect items={selectItems} onValueChange={noop} disabled />,
+      );
+
+      const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
+
+      expect(touchable.props().accessibilityState).toEqual({ disabled: true, expanded: false });
+    });
+
+    it("should have accessibilityRole button on Done button (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect items={selectItems} onValueChange={noop} />,
+      );
+
+      wrapper.find('[testID="ios_touchable_wrapper"]').simulate("press");
+
+      const doneButton = wrapper.find('[testID="done_button"]');
+
+      expect(doneButton.props().accessibilityRole).toEqual("button");
+      expect(doneButton.props().accessibilityLabel).toEqual("Done");
+    });
+
+    it("should use custom doneText as accessibilityLabel on Done button (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect
+          items={selectItems}
+          onValueChange={noop}
+          doneText="Confirm"
+        />,
+      );
+
+      wrapper.find('[testID="ios_touchable_wrapper"]').simulate("press");
+
+      const doneButton = wrapper.find('[testID="done_button"]');
+
+      expect(doneButton.props().accessibilityLabel).toEqual("Confirm");
+    });
+  });
+
   it("should call the onClose callback when set", () => {
     Platform.OS = "ios";
     const onCloseSpy = jest.fn();

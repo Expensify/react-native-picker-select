@@ -439,6 +439,8 @@ export default class RNPickerSelect extends PureComponent {
             left: 4,
           }}
           {...touchableDoneProps}
+          accessibilityRole="button"
+          accessibilityLabel={doneText}
         >
           <View testID="needed_for_touchable">
             <Text
@@ -507,8 +509,10 @@ export default class RNPickerSelect extends PureComponent {
   }
 
   renderIOS() {
-    const { style, modalProps, pickerProps, touchableWrapperProps } = this.props;
+    const { disabled, style, modalProps, pickerProps, touchableWrapperProps } = this.props;
     const { animationType, orientation, selectedItem, showPicker } = this.state;
+
+    const accessibilityLabel = pickerProps && pickerProps.accessibilityLabel;
 
     return (
       <View style={[defaultStyles.viewContainer, style.viewContainer]}>
@@ -519,6 +523,10 @@ export default class RNPickerSelect extends PureComponent {
           }}
           activeOpacity={1}
           {...touchableWrapperProps}
+          accessible
+          accessibilityRole="combobox"
+          accessibilityLabel={accessibilityLabel}
+          accessibilityState={{ disabled, expanded: showPicker }}
         >
           {this.renderTextInputOrChildren()}
         </TouchableOpacity>
