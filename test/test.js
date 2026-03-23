@@ -676,7 +676,7 @@ describe("RNPickerSelect", () => {
       const touchable = wrapper.find('[testID="ios_touchable_wrapper"]');
 
       expect(touchable.props().accessible).toEqual(true);
-      expect(touchable.props().accessibilityRole).toEqual("combobox");
+      expect(touchable.props().accessibilityRole).toEqual("button");
       expect(touchable.props().accessibilityLabel).toEqual("Select a language");
       expect(touchable.props().accessibilityState).toEqual({ disabled: false, expanded: false });
     });

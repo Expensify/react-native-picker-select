@@ -494,6 +494,7 @@ export default class RNPickerSelect extends PureComponent {
       <View pointerEvents="box-only" style={containerStyle}>
         <TextInput
           testID="text_input"
+          pointerEvents="none"
           style={[
             Platform.OS === 'ios' ? style.inputIOS : style.inputAndroid,
             this.getPlaceholderStyle(),
@@ -524,7 +525,8 @@ export default class RNPickerSelect extends PureComponent {
           activeOpacity={1}
           {...touchableWrapperProps}
           accessible
-          accessibilityRole="combobox"
+          // "combobox" has no effect on iOS (facebook/react-native#50123), use "button" instead
+          accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
           accessibilityState={{ disabled, expanded: showPicker }}
         >
