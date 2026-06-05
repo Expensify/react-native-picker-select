@@ -57,6 +57,7 @@ export default class RNPickerSelect extends PureComponent {
 
     // Custom Modal props (iOS only)
     doneText: PropTypes.string,
+    dismissText: PropTypes.string,
     onDonePress: PropTypes.func,
     onUpArrow: PropTypes.func,
     onDownArrow: PropTypes.func,
@@ -98,6 +99,7 @@ export default class RNPickerSelect extends PureComponent {
     useNativeAndroidPickerStyle: true,
     fixAndroidTouchableBug: false,
     doneText: 'Done',
+    dismissText: 'Dismiss',
     onDonePress: null,
     onUpArrow: null,
     onDownArrow: null,
@@ -510,7 +512,8 @@ export default class RNPickerSelect extends PureComponent {
   }
 
   renderIOS() {
-    const { disabled, style, modalProps, pickerProps, touchableWrapperProps } = this.props;
+    const { disabled, style, modalProps, pickerProps, touchableWrapperProps, dismissText } =
+      this.props;
     const { animationType, orientation, selectedItem, showPicker } = this.state;
 
     const accessibilityLabel = pickerProps && pickerProps.accessibilityLabel;
@@ -558,6 +561,8 @@ export default class RNPickerSelect extends PureComponent {
             onPress={() => {
               this.togglePicker(true);
             }}
+            accessibilityRole="button"
+            accessibilityLabel={dismissText}
           />
           {this.renderInputAccessoryView()}
           <View
