@@ -438,9 +438,9 @@ export default class RNPickerSelect extends PureComponent {
             bottom: 4,
             left: 4,
           }}
-          {...touchableDoneProps}
           accessibilityRole="button"
           accessibilityLabel={doneText}
+          {...touchableDoneProps}
         >
           <View testID="needed_for_touchable">
             <Text
