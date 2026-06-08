@@ -757,6 +757,31 @@ describe("RNPickerSelect", () => {
 
       expect(doneButton.props().accessibilityLabel).toEqual("Confirm");
     });
+
+    it("should announce the dismiss overlay as a button labeled Dismiss by default (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect items={selectItems} onValueChange={noop} />,
+      );
+
+      const dismissOverlay = wrapper.find('[testID="ios_modal_top"]');
+
+      expect(dismissOverlay.props().accessibilityRole).toEqual("button");
+      expect(dismissOverlay.props().accessibilityLabel).toEqual("Dismiss");
+    });
+
+    it("should use custom dismissText as accessibilityLabel on the dismiss overlay (iOS)", () => {
+      const wrapper = shallow(
+        <RNPickerSelect
+          items={selectItems}
+          onValueChange={noop}
+          dismissText="Close"
+        />,
+      );
+
+      const dismissOverlay = wrapper.find('[testID="ios_modal_top"]');
+
+      expect(dismissOverlay.props().accessibilityLabel).toEqual("Close");
+    });
   });
 
   it("should call the onClose callback when set", () => {

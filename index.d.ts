@@ -93,6 +93,7 @@ export interface PickerSelectProps {
   useNativeAndroidPickerStyle?: boolean;
   fixAndroidTouchableBug?: boolean;
   doneText?: string;
+  dismissText?: string;
   onDonePress?: () => void;
   onUpArrow?: () => void;
   onDownArrow?: () => void;
