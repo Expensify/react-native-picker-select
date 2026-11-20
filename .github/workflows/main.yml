@@ -2,7 +2,7 @@ name: Autocloser
 on: [issues]
 jobs:
   autoclose:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - name: Autoclose issues that did not follow issue template
         uses: roots/issue-closer@fec85f2a845cd6cf33eda6e6a4c93026e71f86d1 # v1.2
