@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   dependabot:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404-arm
     if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'deps-dev')
     steps:
       - name: Approve Dependabot PR
